@@ -1,8 +1,13 @@
 from django.shortcuts import render
-from rest_framework import generics
+
+from rest_framework import views, generics, status
+from rest_framework.response import Response
+from rest_framework.authentication import authenticate
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+
 
 from .models import User
-from .serializers import SignUpSerializer, UserModelSerializer
+from .serializers import SignUpSerializer, UserModelSerializer, LogInSerializer
 
 # Create your views here.
 
@@ -13,5 +18,57 @@ class UserListView(generics.ListAPIView):
 
 
 class UserSignUpView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = SignUpSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+
+            token = TokenObtainPairSerializer.get_token(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+
+            res_data = {
+                "user": serializer.data,
+                "message": "register success",
+                "token": {
+                    "access": access_token,
+                    "refresh": refresh_token,
+                },
+            }
+            res = Response(res_data, status=status.HTTP_201_CREATED)  # 성공적인 생성은 201 상태 코드를 사용하는 것이 좋습니다.
+            res.set_cookie("access", access_token, httponly=True)
+            res.set_cookie("refresh", refresh_token, httponly=True)
+            return res
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserLogInView(generics.GenericAPIView):
+    serializer_class = LogInSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.validated_data['user']  # 인증된 사용자 객체를 가져옵니다.
+            user_data_serializer = UserModelSerializer(user)
+            token = TokenObtainPairSerializer.get_token(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+            res_data = {
+                "user": user_data_serializer.data,
+                "message": "login success",
+                "token": {
+                    "access": access_token,
+                    "refresh": refresh_token,
+                },
+            }
+            
+            response = Response(res_data, status=status.HTTP_200_OK)
+            response.set_cookie("access", access_token, httponly=True)
+            response.set_cookie("refresh", refresh_token, httponly=True)
+            return response
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

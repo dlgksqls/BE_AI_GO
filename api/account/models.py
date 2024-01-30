@@ -77,8 +77,12 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ROLES = (("User", "user"), ("superuser", "manager"))
+
+    role = models.CharField(max_length=20, choices=ROLES, default="user")
+
     username = models.CharField(max_length=150, unique=True)
-    password2 = models.CharField(max_length=150)
+    password_check = models.CharField(max_length=150)
 
     start_date = models.DateTimeField(default=timezone.now)
 

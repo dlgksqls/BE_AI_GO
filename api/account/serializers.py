@@ -13,7 +13,7 @@ class UserModelSerializer(ModelSerializer):
         model = User
         fields = "__all__"
 
-
+## 회원가입
 class SignUpSerializer(ModelSerializer):
     username = CharField(write_only=True, max_length=150)
     password = CharField(write_only=True, max_length=128)  # Django 기본 User 모델의 비밀번호 최대 길이는 128자 입니다.
@@ -21,18 +21,19 @@ class SignUpSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "password", "password2"]
+        fields = ["username", "password", "password_check"]
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
+        if attrs["password"] != attrs["password_check"]:
             raise ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop("password2")
+        validated_data.pop("password_check")
         user = User.objects.create_user(**validated_data)
         return user
     
+## 로그인
 class LogInSerializer(serializers.Serializer):
     username = CharField(write_only=True, max_length=150)
     password = CharField(write_only=True, max_length=128)

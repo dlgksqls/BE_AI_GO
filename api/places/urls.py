@@ -17,8 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework import routers
+
+from .views import PlaceView, TagView, ReviewView
+
+namespace = "manager"
+
+router_place = routers.DefaultRouter()
+router_tag = routers.DefaultRouter()
+router_review = routers.DefaultRouter()
+
+router_place.register(r"place", PlaceView)
+router_tag.register(r"tag", TagView)
+router_review.register(r"review", ReviewView)
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("account/", include("account.urls")),
-    path("manager/", include("places.urls")),
+    path(r"place/", include(router_place.urls)),
+    path(r"tag/", include(router_tag.urls)),
+    path(r"review/", include(router_review.urls)),
 ]

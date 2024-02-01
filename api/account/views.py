@@ -39,7 +39,7 @@ class UserSignUpView(generics.CreateAPIView):
                     "refresh": refresh_token,
                 },
             }
-            res = Response(res_data, status=status.HTTP_201_CREATED)  # 성공적인 생성은 201 상태 코드를 사용하는 것이 좋습니다.
+            res = Response(res_data, status=status.HTTP_201_CREATED)
             res.set_cookie("access", access_token, httponly=True)
             res.set_cookie("refresh", refresh_token, httponly=True)
             return res
@@ -52,7 +52,7 @@ class UserLogInView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            user = serializer.validated_data['user']  # 인증된 사용자 객체를 가져옵니다.
+            user = serializer.validated_data['user']
             user_data_serializer = UserModelSerializer(user)
             token = TokenObtainPairSerializer.get_token(user)
             refresh_token = str(token)

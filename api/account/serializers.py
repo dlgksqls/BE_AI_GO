@@ -13,7 +13,7 @@ class UserModelSerializer(ModelSerializer):
         model = User
         fields = "__all__"
 
-
+## 회원가입
 class SignUpSerializer(ModelSerializer):
     username = CharField(write_only=True, max_length=150)
     password = CharField(write_only=True, max_length=128)
@@ -21,7 +21,7 @@ class SignUpSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "role", "password", "password_check"]
+        fields = ["username", "password", "password_check"]
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password_check"]:
@@ -29,6 +29,7 @@ class SignUpSerializer(ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        validated_data.pop("password_check")
         if validated_data.get("role") == "superuser":
             validated_data["is_active"] = True
             validated_data["is_staff"] = True
@@ -36,8 +37,8 @@ class SignUpSerializer(ModelSerializer):
         validated_data.pop("password_check")
         user = User.objects.create_user(**validated_data)
         return user
-
-
+    
+## 로그인
 class LogInSerializer(serializers.Serializer):
     username = CharField(write_only=True, max_length=150)
     password = CharField(write_only=True, max_length=128)

@@ -5,13 +5,25 @@ User = get_user_model()
 
 
 class Place(models.Model):
-    name = models.CharField(verbose_name="장소명", max_length=100)
+    name = models.CharField(verbose_name="장소명", max_length=150)
     image = models.ImageField(verbose_name="장소이미지", null=True, blank=True)
+    branch = models.CharField(verbose_name="지점명", max_length=150)
+    classification = models.CharField(verbose_name="상권업종대분류명", max_length=150)
+    industry_classification = models.CharField(verbose_name="상권업종소분류명", max_length=300)
+    city_county = models.CharField(verbose_name="시군구명", max_length=150)
+    Administrative = models.CharField(verbose_name="행정동명", max_length=150)
+    legal = models.CharField(verbose_name="법정동명", max_length=150)
+    adress = models.TextField(verbose_name="지번주소")
+    building = models.CharField(verbose_name="건물명", max_length=150)
+    street_name_address = models.TextField(verbose_name="도로명주소", max_length=150)
+    zip_code = models.CharField(verbose_name="우편번호", max_length=150)
+    floor = models.IntegerField(verbose_name="층정보")
+    hardnesss = models.FloatField(verbose_name="경도")
+    latitude = models.FloatField(verbose_name="위도")
+
     info = models.TextField(verbose_name="장소정보")
-    address = models.CharField(verbose_name="장소주소", max_length=100)
     like = models.IntegerField(verbose_name="좋아요수", default=0)
     tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
-
     def __str__(self):
         return self.name
 

@@ -21,7 +21,7 @@ class SignUpSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "password", "password_check"]
+        fields = ["username", "role", "password", "password_check"]
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password_check"]:
@@ -29,7 +29,6 @@ class SignUpSerializer(ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop("password_check")
         if validated_data.get("role") == "superuser":
             validated_data["is_active"] = True
             validated_data["is_staff"] = True

@@ -6,14 +6,15 @@ User = get_user_model()
 
 class Place(models.Model):
     name = models.CharField(verbose_name="장소명", max_length=150)
-    image = models.ImageField(verbose_name="장소이미지", null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
     classification = models.CharField(verbose_name="업종", max_length=150)
     street_name_address = models.TextField(verbose_name="도로명주소", max_length=150)
     hardness = models.FloatField(verbose_name="경도")
     latitude = models.FloatField(verbose_name="위도")
-    info = models.TextField(verbose_name="장소정보")
+    #tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
     like = models.IntegerField(verbose_name="좋아요수", default=0)
-    tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
+    info = models.TextField(verbose_name="장소정보")
+    
     def __str__(self):
         return self.name
 

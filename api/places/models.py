@@ -11,18 +11,21 @@ class Place(models.Model):
     street_name_address = models.TextField(verbose_name="도로명주소", max_length=150)
     hardness = models.FloatField(verbose_name="경도")
     latitude = models.FloatField(verbose_name="위도")
-    #tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
+    # tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
     like = models.IntegerField(verbose_name="좋아요수", default=0)
     info = models.TextField(verbose_name="장소정보")
-    
+    call = models.CharField(verbose_name="전화번호", max_length=150)
+
     def __str__(self):
         return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(verbose_name="태그명", max_length=50, primary_key=True)
 
     def __str__(self):
         return self.name
+
 
 class Review(models.Model):
     content = models.TextField(verbose_name="리뷰내용")

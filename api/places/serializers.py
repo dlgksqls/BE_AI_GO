@@ -31,4 +31,4 @@ class PlaceModelSerializer(ModelSerializer):
 
     class Meta:
         model = Place
-        fields = ["name", "image", "info", "address", "like", "tag", "reviews"]
+        fields = "__all__"

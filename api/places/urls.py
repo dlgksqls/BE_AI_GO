@@ -32,7 +32,7 @@ router_tag.register(r"tag", TagView)
 router_review.register(r"review", ReviewView)
 
 urlpatterns = [
-    path(r"place/", include(router_place.urls)),
-    path(r"tag/", include(router_tag.urls)),
-    path(r"review/", include(router_review.urls)),
+    path(r'', include(router_place.urls)),
+    path(r'', include(router_tag.urls)),
+    path(r'', include(router_review.urls)),
 ]

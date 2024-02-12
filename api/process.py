@@ -18,7 +18,7 @@ django.setup()
 from places.models import Place, Tag
 
 # Read csv file.
-df = pd.read_excel(r"C:\Users\horai\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
+df = pd.read_excel(r"C:\Users\user\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
 
 
 hardness = df["hardness"]

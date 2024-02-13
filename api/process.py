@@ -17,14 +17,13 @@ django.setup()
 
 from places.models import Place, Tag
 
+import time
+
+from config import settings
+
 # Read csv file.
 df = pd.read_excel(r"C:\Users\user\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
 
-
-hardness = df["hardness"]
-latitude = df["latitude"]
-
-# Connect to (create) database.
 for index, row in df.iterrows():
     place = Place.objects.create(
         name=row["name"],

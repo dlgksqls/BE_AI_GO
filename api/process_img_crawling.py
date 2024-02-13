@@ -31,7 +31,7 @@ import time
 from config import settings
 
 # Read csv file.
-df = pd.read_excel(r"C:\Users\user\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
+df = pd.read_excel(r"C:\work_django\BE_AI_GO\api\data.xlsx", engine="openpyxl")
 
 chrom_options = Options()
 chrom_options.add_experimental_option("detach", True)
@@ -41,18 +41,18 @@ chrom_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 service = Service(executable_path=ChromeDriverManager().install())
 browser = webdriver.Chrome(service=service, options=chrom_options)
 
-browser.get("https://www.naver.com/")
+browser.get("https://map.naver.com/")
 browser.implicitly_wait(10)  # 로딩이 끝날 때까지 10초까지는 기다려줌
-search = browser.find_element(By.CSS_SELECTOR,"#query")
+search = browser.find_element(By.CSS_SELECTOR,".input_search")
 search.click()
 count = 0
 
 # Connect to (create) database.
 for index, row in df.iterrows():
     if count == 0:
-        search = browser.find_element(By.CSS_SELECTOR,"#query")
+        search = browser.find_element(By.CSS_SELECTOR,".input_search")
         search.click()
-        search.send_keys(row["name"])
+        search.send_keys(row["street_name_address"]+" "+row["name"])
         search.send_keys(Keys.ENTER)
         browser.find_element(By.CSS_SELECTOR, "#lnb > div.lnb_group > div > div.lnb_nav_area._nav_area_root > div > div.api_flicking_wrap._conveyer_root > div:nth-child(3) > a").click()
         count += 1
@@ -60,7 +60,7 @@ for index, row in df.iterrows():
         search = browser.find_element(By.CSS_SELECTOR,"#nx_query")
         search.clear()
         search.click()
-        search.send_keys(row["name"])
+        search.send_keys(row["street_name_address"]+" "+row["name"])
         search.send_keys(Keys.ENTER)
 
     #time.sleep(5)

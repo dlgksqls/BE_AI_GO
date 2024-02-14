@@ -50,3 +50,44 @@ class LogInSerializer(serializers.Serializer):
         if not user.is_active:
             raise serializers.ValidationError("User is not active.")
         return {"user": user}
+    
+class AuthSerializer(serializers.Serializer):
+    username = CharField(write_only=True, max_length=150)
+
+    def validate(self, data):
+        username = data.get("username")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid username")
+        if not user.is_active:
+            raise serializers.ValidationError("User is not active")
+        data['user'] = user
+        return data
+    
+class ChangePassWordSerializer(serializers.Serializer):
+    username = CharField(write_only=True, max_length=150)
+    new_password = CharField(write_only=True, max_length=128)
+    check_new_password = CharField(write_only=True, max_length=128)
+
+    def validate(self, data):
+        username = data.get("username")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid username")
+        if not user.is_active:
+            raise serializers.ValidationError("User is not active")
+        
+        if data["new_password"] != data["check_new_password"]:
+            raise ValidationError({"password": "Password fields didn't match."})
+        
+        data['user'] = user
+        return data
+    
+    def update(self, instance, validated_data):
+        user = validated_data['user']
+        user.set_password(validated_data["new_password"])
+        user.save()
+    
+        return user

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, Toke
 
 
 from .models import User
-from .serializers import SignUpSerializer, UserModelSerializer, LogInSerializer
+from .serializers import SignUpSerializer, UserModelSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer
 
 # Create your views here.
 
@@ -70,5 +70,45 @@ class UserLogInView(generics.GenericAPIView):
             response.set_cookie("access", access_token, httponly=True)
             response.set_cookie("refresh", refresh_token, httponly=True)
             return response
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class AuthView(generics.GenericAPIView):
+    serializer_class = AuthSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            user_data_serializer = UserModelSerializer(user)
+            token = TokenObtainPairSerializer.get_token(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+            res_data = {
+                "user": user_data_serializer.data["username"],
+                "message": "login success",
+                "token": {
+                    "access": access_token,
+                    "refresh": refresh_token,
+                },
+            }
+            
+            response = Response(res_data, status=status.HTTP_200_OK)
+            response.set_cookie("access", access_token, httponly=True)
+            response.set_cookie("refresh", refresh_token, httponly=True)
+            return response
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class ChangePasswordView(generics.GenericAPIView):
+    serializer_class = ChangePassWordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.update(serializer.validated_data['user'], serializer.validated_data)
+            return Response("password changing complete!", status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -3,3 +3,7 @@ openai
 -U langchain-openai
 -U langchain langchain-community
 streamlit
+pandas
+selenium
+foliume
+bs4

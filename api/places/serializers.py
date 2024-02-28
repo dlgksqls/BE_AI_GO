@@ -56,4 +56,9 @@ class PlaceSearchSerializer(ModelSerializer):
         model = Place
         fields = ["name"]
 
+class SchedulePlaceSerializer(ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ["name"]
+
 

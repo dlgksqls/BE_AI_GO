@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-from django.core.exceptions import ImproperlyConfig
+from django.core.exceptions import ImproperlyConfigured
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = "django-insecure-vwsfbnfhe9ef^+0-+jy&hq37n!#3#y%lfd-xl3b^4t(lhhj04="
+SECRET_KEY = "django-insecure-vwsfbnfhe9ef^+0-+jy&hq37n!#3#y%lfd-xl3b^4t(lhhj04="
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -103,14 +103,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-def get_env_variable(var_name):
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = 'Set the {} environment variable'.format(var_name)
-        raise ImproperlyConfig(error_msg)
+# def get_env_variable(var_name):
+#     try:
+#         return os.environ[var_name]
+#     except KeyError:
+#         error_msg = 'Set the {} environment variable'.format(var_name)
+#         raise ImproperlyConfigured(error_msg)
 
-SECRET_KEY = get_env_variable('DJANGO_SECRET')
+# SECRET_KEY = get_env_variable('DJANGO_SECRET')
 
 DATABASES = {
     "default": {

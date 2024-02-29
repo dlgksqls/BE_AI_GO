@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-from django.core.exceptions import ImproperlyConfigured
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,9 +28,6 @@ SECRET_KEY = "django-insecure-vwsfbnfhe9ef^+0-+jy&hq37n!#3#y%lfd-xl3b^4t(lhhj04=
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -50,11 +45,10 @@ INSTALLED_APPS = [
     'account',  
     'plans',
     'places',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', ## 이거 추가!! 위치 중요!!!
+    #'corsheaders.middleware.CorsMiddleware', ## 이거 추가!! 위치 중요!!!
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -62,7 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware', ## 이거 추가!!
+    #'whitenoise.middleware.WhiteNoiseMiddleware', ## 이거 추가!!
 ]
 
 ROOT_URLCONF = "config.urls"
